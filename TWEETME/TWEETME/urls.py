@@ -21,10 +21,11 @@ urlpatterns = [
     # path('polls/', include('polls.urls')),
     path('admin/', admin.site.urls),
     path('', home_view),
-    path('api/tweets/action',tweet_action_view),
+    # path('api/tweets/action',tweet_action_view),
     path('create-tweet',tweet_create_view),
-    path('api/tweets/<int:id>/delete', tweet_delete_view),
+    #     # path('api/tweets/<int:id>/delete', tweet_delete_view),
     path('tweets/<int:id>', tweet_detail_view),
     path('tweets', tweet_list_view),
+    path('api/tweets/',include('tweets.urls')),
 
 ]
