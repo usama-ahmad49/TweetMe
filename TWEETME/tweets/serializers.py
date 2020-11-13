@@ -16,7 +16,9 @@ class TweetActionSerializer(serializers.Serializer):
     def validate_action(self, value):
         value = value.lower().strip()
         if not value in TWEET_ACTION_OPTIONS:
-            raise serializers.ValidationError('this is not a valid action form')
+            raise serializers.ValidationError(
+                'this is not a valid action form')
+
 
 class TweetCreateSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField(read_only=True)
@@ -38,6 +40,7 @@ class TweetSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField(read_only=True)
     # content =serializers.SerializerMethodField(read_only=True)
     parent = TweetCreateSerializer(read_only=True)
+
     class Meta:
         model = Tweet
         fields = ['id', 'content', 'likes', 'parent']
@@ -45,11 +48,8 @@ class TweetSerializer(serializers.ModelSerializer):
     def get_likes(self, obj):
         return obj.likes.count()
 
-    def get_content(self,obj):
+    def get_content(self, obj):
         content = obj.content
         if obj.is_retweet:
             content = obj.parent.content
         return content
-
-
-

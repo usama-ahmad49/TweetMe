@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,10 +24,10 @@ SECRET_KEY = 'd-9e+k%_uwhsemn%weildt!6)t#7+^tm^1mow4n5czi&ila^18'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.mydomain.com']
+ALLOWED_HOSTS = ['127.0.0.1', '.mydomain.com', 'localhost']
 LOGIN_URL = "/login"
 MAX_TWEET_LENGTH = 240
-TWEET_ACTION_OPTIONS = ['like','unlike','retweet']
+TWEET_ACTION_OPTIONS = ['like', 'unlike', 'retweet']
 
 # Application definition
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tweets',
     # third-part
+    'corsheaders',
     'rest_framework',
 
 ]
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -125,12 +127,28 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-DEFAULT_RENDERER_CLASSES =  [
-        'rest_framework.renderers.JSONRenderer',
-    ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static-root")
+
+CORS_ORIGIN_ALLOW_ALL = True  # any website has access to my api
+CORS_URLS_REGEX = r'^/api/.*$'
+
+DEFAULT_RENDERER_CLASSES = [
+    'rest_framework.renderers.JSONRenderer',
+]
+DEFAULT_AUTHENTICATION_CLASSES = [
+    'rest_framework.authentication.SessionAuthentication'
+]
 if DEBUG:
-    DEFAULT_RENDERER_CLASSES +=['rest_framework.renderers.BrowsableAPIRenderer',]
+    DEFAULT_RENDERER_CLASSES += [
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+    DEFAULT_AUTHENTICATION_CLASSES +=[
+        'tweets.rest_api.dev.DevAuthentication'
+    ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication'
