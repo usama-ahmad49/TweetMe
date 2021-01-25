@@ -14,7 +14,21 @@ ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
 
 def home_view(request, *args, **kwargs):
+    username=None
+    if request.user.is_authenticated:
+        username = request.user.username
     return render(request, "tweets/home.html", context={}, status=200)
+
+def local_tweets_list_view(request, *args, **kwargs):
+    return render(request, "tweets/list.html")
+
+def local_tweets_detail_view(request, tweets_id, *args, **kwargs):
+    return render(request, "tweets/detail.html", context={"tweet_id":tweets_id})
+
+def local_tweets_profile_view(request,username, *args, **kwargs):
+    return render(request, "tweets/profile.html", context={"profile_username":username})
+
+
 
 
 @api_view(['POST'])  # http method client == POST
@@ -31,6 +45,9 @@ def tweet_create_view(request, *args, **kwargs):
 @api_view(['GET'])
 def tweet_list_view(request, *args, **kwargs):
     qs = Tweet.objects.all()
+    username = request.GET.get('username') #?username=usama
+    if username != None:
+        qs= qs.filter(user__username__iexact=username)
     serializer = TweetSerializer(qs, many=True)
     return Response(serializer.data)
 
