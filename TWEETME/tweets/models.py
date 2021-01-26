@@ -1,7 +1,7 @@
 import datetime
 import random
 from django.db import models
-# Create your models here.
+
 from django.utils import timezone
 from django.conf import settings
 

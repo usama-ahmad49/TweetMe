@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include,path, re_path
-from tweets.views import (local_tweets_list_view,local_tweets_detail_view,local_tweets_profile_view)
+from tweets.views import (tweets_list_view,tweets_detail_view,tweets_profile_view)
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -24,10 +24,10 @@ from django.views.generic import TemplateView
 urlpatterns = [
     # path('polls/', include('polls.urls')),
     path('admin/', admin.site.urls),
-    path('', local_tweets_list_view),
-    path('<int:tweet_id>', local_tweets_detail_view),
-    path('profile/<str:username>', local_tweets_profile_view),
-    path('api/tweets/',include('tweets.urls')),
+    path('', tweets_list_view),
+    path('<int:tweet_id>', tweets_detail_view),
+    path('profile/<str:username>', tweets_profile_view),
+    path('api/tweets/',include('tweets.api.urls')),
 
 ]
 
